@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Popular Movie Stage 1</string>
+    <string name="sort_by">Sorted by : </string>
+</resources>
