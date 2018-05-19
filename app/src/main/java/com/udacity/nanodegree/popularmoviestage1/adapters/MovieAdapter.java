@@ -1,28 +1,45 @@
 package com.udacity.nanodegree.popularmoviestage1.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.udacity.nanodegree.popularmoviestage1.DetailActivity;
+import com.udacity.nanodegree.popularmoviestage1.MainActivity;
 import com.udacity.nanodegree.popularmoviestage1.R;
+import com.udacity.nanodegree.popularmoviestage1.Utils.Movie;
+import com.udacity.nanodegree.popularmoviestage1.Utils.NetworkUtils;
 
+import java.util.List;
+
+/*
+ * Adapter class for binding data with recycler view
+ * and providing functionality on click.
+ */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
+    // Constants for inflating different layouts depending upon
+    // the position in recycler view.
     public static final int VIEWTYPE_FIRST_ITEM = 0;
     public static final int VIEWTYPE_REST_ITEMS = 1;
-    private final Context context;
 
+
+    private final Context context;
+    private List<Movie> movies;
+
+    // Constructor for initializing adapter.
     public MovieAdapter(Context context) {
         this.context = context;
     }
@@ -53,9 +70,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         else return VIEWTYPE_REST_ITEMS;
     }
 
+    // method for updating the movies fetched from the tmdb server.
+    public void updateMovies(List<Movie> movies) {
+        this.movies = movies;
+        notifyDataSetChanged();
+    }
+
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieViewHolder holder, final int position) {
         if (position != 0) {
+
+            // getting display height so that card view can adjust itself
+            // depending upon the display size. So on each device layout
+            // will look approximately similar.
             DisplayMetrics metrics = new DisplayMetrics();
             WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             manager.getDefaultDisplay().getMetrics(metrics);
@@ -64,25 +91,46 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
+
             int marginCenters = (int) context.getResources().getDimension(R.dimen.cardview_margin);
             int marginEnd = (int) context.getResources().getDimension(R.dimen.cardview_marginEnd);
 
-            if (position % 2 != 0) {
+            // applying different margins to views depending upon their respective
+            // position in list so that the UI will look equi-spaced from left and right.
+            if (position % 2 != 0)
                 params.setMargins(marginEnd, marginCenters, marginCenters, marginCenters);
-                Log.v("MARRGINS at ODD", params.leftMargin+" " +params.topMargin+ " "+ params.rightMargin+" "+params.bottomMargin);
-            } else {
+            else
                 params.setMargins(marginCenters, marginCenters, marginEnd, marginCenters);
-                Log.v("MARRGINS at EVEN", params.leftMargin+" " +params.topMargin+ " "+ params.rightMargin+" "+params.bottomMargin);
-            }
 
             holder.cardViewMovie.setLayoutParams(params);
+
+            if (movies.size() != 0) {
+                Picasso.with(context).load(NetworkUtils.buildImgUrl(movies.get(position - 1).getPosterPath()).toString())
+                        .into(holder.ivMovieThumbnail);
+            }
+
+            holder.ivMovieThumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra(MainActivity.PARCELABLE_KEY, movies.get(position - 1));
+                    context.startActivity(intent);
+                }
+            });
+        } else {
+            // getting the current movie category to show it in the textview at the top of list.
+            SharedPreferences menuPrefs = context.getSharedPreferences(context.getResources().getString(R.string.sp_name), Context.MODE_PRIVATE);
+            holder.tvSortOrder.setText(menuPrefs.getString(context.getResources().getString(R.string.sp_key_movie_current_type),
+                    context.getResources().getString(R.string.movie_by_popularity_key)));
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        if (movies != null)
+            return movies.size() + 1;
+        else return 1;
     }
 
     class MovieViewHolder extends RecyclerView.ViewHolder {

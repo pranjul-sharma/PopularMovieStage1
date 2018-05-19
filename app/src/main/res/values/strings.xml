@@ -1,4 +1,34 @@
 <resources>
     <string name="app_name">Popular Movie Stage 1</string>
-    <string name="sort_by">Sorted by : </string>
+    <string name="sort_by">Showing by: </string>
+
+    <!-- Api key contants for accessing tmdb server. -->
+    <string name="api_key">api_key</string>
+    <!-- put your api key for tmdb server here. -->
+    <string name="moviedb_api_key">{YOUR_API_KEY_HERE}</string>
+
+    <!-- action key for storing user preferences. -->
+    <string name="action_sort_order">sort by</string>
+
+    <!-- various strings for showing in user setting for changing his preferences. -->
+    <string name="dialog_title">Choose one.</string>
+    <string name="action_cancel">cancel</string>
+
+    <!-- name and keys for storing data in sharedPreferences. -->
+    <string name="sp_name">MoviePrefs</string>
+    <string name="sp_key_movie_order">Movie order</string>
+    <string name="sp_key_movie_current_type">Movie current type</string>
+
+    <string name="movie_by_popularity_key">Popularity</string>
+    <string name="movie_by_rating_key">Top rated</string>
+    <string name="movie_by_popularity_value">popular</string>
+    <string name="movie_by_rating_value">top_rated</string>
+
+    <!-- Heading under which data for movie in DetailActivity is being shown. -->
+    <string name="original_lang">Original Language:</string>
+    <string name="release_date">Release Date:</string>
+    <string name="overview">Overview:</string>
+
+    <!-- string for providing placeholder content description to the imageviews. -->
+    <style name="placeholder">This view will show an image for a movie.</style>
 </resources>
