@@ -12,7 +12,7 @@
 
     <!-- various strings for showing in user setting for changing his preferences. -->
     <string name="dialog_title">Choose one.</string>
-    <string name="action_cancel">cancel</string>
+    <string name="action_cancel">Cancel</string>
 
     <!-- name and keys for storing data in sharedPreferences. -->
     <string name="sp_name">MoviePrefs</string>
@@ -30,5 +30,5 @@
     <string name="overview">Overview:</string>
 
     <!-- string for providing placeholder content description to the imageviews. -->
-    <style name="placeholder">This view will show an image for a movie.</style>
+    <string name="placeholder">This view will show an image for a movie.</string>
 </resources>
